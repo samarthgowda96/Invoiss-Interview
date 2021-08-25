@@ -3,6 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@material-ui/core';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { provider, ProviderComposer } from '../providerComposer';
 
 import useTheme from '../useTheme';
 
@@ -24,14 +25,16 @@ function MyApp( { Component, pageProps }: AppProps ) {
 					user-scalable=no, viewport-fit=cover'
 			/>
 		</Head>
-		<StyledEngineProvider injectFirst>
-			<CacheProvider value={cache}>
-				<ThemeProvider theme={theme}>
-					<CssBaseline/>
+		{/* converted providers to providerComposers */}
+		<ProviderComposer
+		providers={[
+			provider(StyledEngineProvider),
+			provider(CacheProvider, {value:cache}),
+			provider(ThemeProvider ,{theme:theme})
+		]}
+		>			<CssBaseline/>
 					<Component {...pageProps}/>
-				</ThemeProvider>
-			</CacheProvider>
-		</StyledEngineProvider>
+		</ProviderComposer>
 	</>;
 }
 export default MyApp;
